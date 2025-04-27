@@ -5,73 +5,93 @@ const { chats } = require('./data/data');
 const colors = require('colors');
 const userRouter = require('./routes/userRouter');
 const chatRoutes = require('./routes/chatRoutes');
-const messageRoutes = require('./routes/messageRoutes')
+const messageRoutes = require('./routes/messageRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
-const path = require('path') 
+const path = require('path'); 
 
+const cors = require('cors');
 
+// Connect to the database
 connectDB();  
+
 const app = express();
 
-app.use(express.json()); // to accept json data
+// Middleware to parse JSON
+app.use(express.json()); 
 
-app.get('/', (req, res) => {
-  res.send('API is running Successfully...');
-}); 
-
+// Use routes for different API endpoints
 app.use('/api/user', userRouter);
-app.use('/api/chat',chatRoutes);
+app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
 
+// Enable CORS for the frontend (running on port 3000)
+app.use(cors({
+  origin: "http://localhost:3000",  // Adjust this if your frontend is running on a different port
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
 
-// --------------------------deployment------------------------------
+// -------------------------- Deployment Logic ------------------------------
 
+// Resolve directory path for static files
 const __dirname1 = path.resolve();
 
+// Production environment logic
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1, "/frontend/dist")));
+  // Serve static files from the frontend's dist folder
+  app.use(express.static(path.join(__dirname1, "frontend", "dist")));
 
-  app.get(/^\/(?!api).*/, (req, res) =>
-    res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running..");
+  // Catch-all route to serve the React index.html file for non-API requests
+  app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"));
   });
-}  
+} else {
+  // If not in production, just show a message
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
-//--------------------------deployment------------------------------
-
-
+// -------------------------- Error Handlers ------------------------------
 app.use(notFound);
 app.use(errorHandler);
 
+// Define the port for the server
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(5000, console.log(`Server is running on port ${PORT}`.yellow.bold));
+// Start the backend server
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`.yellow.bold);
+});
 
-const io = require('socket.io')(server,{
+// -------------------------- Socket.IO Setup ------------------------------
+const io = require('socket.io')(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5000"
+    origin: "http://localhost:3000"  // Ensure this matches your frontend URL
   }
-})
+});
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
-  
+
+  // Setup the user when they connect
   socket.on("setup", (userData) => {
     socket.join(userData._id);
     socket.emit("connected");
   });
 
+  // When a user joins a chat room
   socket.on("join chat", (room) => {
     socket.join(room);
     console.log("User Joined Room: " + room);
   });
+
+  // Emit typing event to the room
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
+  // Handle new messages
   socket.on("new message", (newMessageRecieved) => {
     var chat = newMessageRecieved.chat;
 
@@ -84,9 +104,9 @@ io.on("connection", (socket) => {
     });
   });
 
+  // Handle user disconnection
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
     socket.leave(userData._id);
   });
-
 });
