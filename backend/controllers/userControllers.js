@@ -23,7 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
         name,
         email,
         password,
-        pic: req.body.pic || `https://api.dicebear.com/9.x/avataaars/svg`,
+        pic: req.body.pic || `https://api.dicebear.com/6.x/bottts/svg?seed=${Math.random()}`,
     });
 
     if (user) {

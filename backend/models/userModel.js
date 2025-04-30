@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema(
         pic: {
             type: String,
             default:
-                `https://api.dicebear.com/9.x/avataaars/svg`,
+                `https://api.dicebear.com/6.x/bottts/svg?seed=${Math.random()}`,
         },
     },
     {
