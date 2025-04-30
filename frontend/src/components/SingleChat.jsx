@@ -18,7 +18,7 @@ import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
 import { color } from "framer-motion";
 import { Flex } from "@chakra-ui/layout";
-const ENDPOINT = "http://localhost:5000"; // "https://Tik-Talk.herokuapp.com"; -> After deployment
+const ENDPOINT = "https://tik-talk-idlt.onrender.com"; // "https://Tik-Talk.idlt.onrender.com"; -> After deployment
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
