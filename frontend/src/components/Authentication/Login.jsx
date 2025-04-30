@@ -20,7 +20,7 @@ import {
   Text, 
   Image 
 } from '@chakra-ui/react';
-import  MyPic from "./MyPic.jpeg";
+import  MyPic1 from "./MyPic1.jpeg";
 
 const Login = () => {
     const [show, setShow] = React.useState(false);
@@ -152,7 +152,7 @@ const Login = () => {
             justifyContent="space-between"
           >
             <Image 
-               src={MyPic}
+               src={MyPic1}
                alt="My Pic"
               borderRadius="full" 
               boxSize="150px" 
