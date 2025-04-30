@@ -15,9 +15,7 @@ const app = express();
 
 app.use(express.json()); // to accept json data
 
-app.get('/', (req, res) => {
-  res.send('API is running Successfully...');
-}); 
+
 
 app.use('/api/user', userRouter);
 app.use('/api/chat',chatRoutes);
@@ -33,7 +31,7 @@ if (process.env.NODE_ENV === "production") {
 
   app.get(/^\/(?!api).*/, (req, res) =>
     res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"))
-  );
+  ); 
 } else {
   app.get("/", (req, res) => {
     res.send("API is running..");
@@ -53,7 +51,7 @@ const server = app.listen(5000, console.log(`Server is running on port ${PORT}`.
 const io = require('socket.io')(server,{
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5000"
+    origin: ["http://localhost:5000", "http://localhost:5173"]
   }
 })
 
