@@ -1,3 +1,4 @@
+import { ChatState } from '../../Context/ChatProvider';
 import React from 'react';
 import { VStack } from '@chakra-ui/react';
 import { FormControl, FormLabel } from '@chakra-ui/react';
@@ -28,6 +29,7 @@ const Login = () => {
     const [password, setPassword] = React.useState("");
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { setUser } = ChatState();
 
     const toast = useToast();
     const history = useHistory();
@@ -70,6 +72,7 @@ const Login = () => {
                 position: "bottom",
             });
             localStorage.setItem("userInfo", JSON.stringify(data));
+            setUser(data);
             setLoading(false);
             history.push("/chats");
         }

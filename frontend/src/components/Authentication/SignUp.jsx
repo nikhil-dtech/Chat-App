@@ -1,3 +1,4 @@
+import { ChatState } from '../../Context/ChatProvider';
 import { VStack } from '@chakra-ui/react';
 import { FormControl, FormLabel } from '@chakra-ui/react';
 import { Input } from '@chakra-ui/react';
@@ -22,6 +23,7 @@ const Signup = () => {
     const [loading, setLoading] = useState(false);
     const toast = useToast();
     const history = useHistory();
+    const { setUser } = ChatState();
 
     const handleClick = () => {
     setShow(!show);
@@ -108,6 +110,7 @@ const Signup = () => {
                 position: "bottom",
             });
             localStorage.setItem("userInfo", JSON.stringify(data));
+            setUser(data);
             setLoading(false);
             history.push("/chats");
         } catch (error) {

@@ -4,22 +4,20 @@ import { useHistory } from "react-router-dom";
 const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
-  const [user, setUser] = useState();
+  // Initialize user directly from localStorage.
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("userInfo")));
   const [selectedChat, setSelectedChat] = useState();
   const [notification, setNotification] = useState([]);
   const [chats, setChats] = useState([]);
 
   const history = useHistory();
 
+  // Redirect if there's no user.
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    setUser(userInfo);
-
-    if (!userInfo) {
+    if (!user) {
       history.push("/");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history]);
+  }, [user, history]);
 
   return (
     <ChatContext.Provider
