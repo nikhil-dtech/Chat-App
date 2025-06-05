@@ -59,11 +59,17 @@ cd Chat-App
 cd server
 npm install
 ```
- ### 3. Run the backend
+ ### 3. Create a .env file in /server
+```bash
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+PORT=5000
+```
+ ### 4. Run the backend
 ```bash
 node server.js
 ```
- ### 4. Setup Frontend
+ ### 5. Setup Frontend
 ```bash
 cd ../client
 npm install
