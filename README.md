@@ -5,7 +5,7 @@ The app allows users to register, log in, and participate in private and group c
 
 ## 🔗 Live Demo
 
-> https://github.com/nikhil-dtech/Chat-App.git
+> https://tik-talk-idlt.onrender.com
 
 ## 🚀 Features
 
